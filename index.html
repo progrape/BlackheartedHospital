@@ -62,7 +62,7 @@
             $('.container').html(html);
             $.weui.hideLoading();
         }).error(function (err) {
-            console.log(err);
+            $.weui.alert(JSON.stringify(err));
             $.weui.hideLoading();
         }).always(function () {
 
