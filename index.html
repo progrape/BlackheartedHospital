@@ -49,12 +49,12 @@
                 if (line) {
                     // 分组开头
                     if (/^##[^#]?/gi.test(line)) {
-                        area = line;
+                        area = line.replace('##', '');
                         keys.push(area);
                         list[area] = list[area] || [];
                     }
                     else if (/-/gi.test(line) && area) {
-                        list[area].push(line);
+                        list[area].push(line.replace('-', ''));
                     }
                 }
             }
