@@ -45,6 +45,10 @@
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
                 if (line) {
+                    if (/1\.1beta/gi.test(line)) {
+                        console.log(line);
+                        break;
+                    }
                     // 分组开头
                     if (/^##[^#]+/gi.test(line)) {
                         area = line.replace('##', '');
@@ -54,7 +58,7 @@
                         area = null;
                     }
                     else if (/-/gi.test(line) && area) {
-                        list[area].push(line.replace('-', ''));
+                        list[area].push(line.replace(/[#\s-]/gi, ''));
                     }
                 }
             }
