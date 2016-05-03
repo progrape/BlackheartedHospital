@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>BlackheartedHospital</title>
+    <link rel="stylesheet" href="//res.wx.qq.com/open/libs/weui/0.4.2/weui.min.css">
+    <style>
+        body {
+            background: #efeff4;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+</div>
+<script type="text/html" id="tpl">
+    {{each keys as key}}
+    <div class="weui_cells_title">{{key}}</div>
+
+        <div class="weui_cells">
+            {{each list[key] as name}}
+            <div class="weui_cell">
+                <div class="weui_cel_bd weui_cell_primary">
+                    <p>{{name}}</p>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+
+    {{/each}}
+</script>
+<script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script src="//rawgit.com/progrape/weui.js/master/dist/weui.js"></script>
+<script src="./template.js"></script>
+<script>
+    $(function () {
+        $.weui.loading('加载中...');
+
+        $.get('https://raw.githubusercontent.com/langhua9527/BlackheartedHospital/master/list.txt').success(function (str) {
+            var lines = str.split('\n');
+            var list = {};
+            var keys = [];
+            var area = null;
+
+            for (var i = 0; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (line) {
+                    // 分组开头
+                    if (/^##[^#]?/gi.test(line)) {
+                        area = line;
+                        keys.push(area);
+                        list[area] = list[area] || [];
+                    }
+                    else if (/-/gi.test(line) && area) {
+                        list[area].push(line);
+                    }
+                }
+            }
+            var html = template('tpl', {keys: keys, list: list});
+            $('.container').html(html);
+        }).error(function (err) {
+            console.log(err);
+        }).always(function () {
+            $.weui.hideLoading();
+        });
+    });
+</script>
+</body>
+</html>
