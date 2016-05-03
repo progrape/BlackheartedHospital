@@ -8,6 +8,7 @@
     <style>
         body {
             background: #efeff4;
+            padding-bottom: 15px;
         }
     </style>
 </head>
@@ -16,19 +17,17 @@
 
 </div>
 <script type="text/html" id="tpl">
-    {{each keys as key}}
+    {{each list as value key}}
     <div class="weui_cells_title">{{key}}</div>
-
-        <div class="weui_cells">
-            {{each list[key] as name}}
-            <div class="weui_cell">
-                <div class="weui_cel_bd weui_cell_primary">
-                    <p>{{name}}</p>
-                </div>
+    <div class="weui_cells">
+        {{each list[key] as name}}
+        <div class="weui_cell">
+            <div class="weui_cel_bd weui_cell_primary">
+                <p>{{name}}</p>
             </div>
-            {{/each}}
         </div>
-
+        {{/each}}
+    </div>
     {{/each}}
 </script>
 <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
@@ -38,27 +37,28 @@
     $(function () {
         $.weui.loading('加载中...');
 
-        $.get('https://raw.githubusercontent.com/langhua9527/BlackheartedHospital/master/list.txt').success(function (str) {
+        $.get('https://raw.githubusercontent.com/langhua9527/BlackheartedHospital/master/README.md').success(function (str) {
             var lines = str.split('\n');
             var list = {};
-            var keys = [];
             var area = null;
 
             for (var i = 0; i < lines.length; i++) {
                 var line = lines[i].trim();
                 if (line) {
                     // 分组开头
-                    if (/^##[^#]?/gi.test(line)) {
+                    if (/^##[^#]+/gi.test(line)) {
                         area = line.replace('##', '');
-                        keys.push(area);
                         list[area] = list[area] || [];
+                    }
+                    else if (/^#[^#]+/gi.test(line)) {
+                        area = null;
                     }
                     else if (/-/gi.test(line) && area) {
                         list[area].push(line.replace('-', ''));
                     }
                 }
             }
-            var html = template('tpl', {keys: keys, list: list});
+            var html = template('tpl', {list: list});
             $('.container').html(html);
             $.weui.hideLoading();
         }).error(function (err) {
