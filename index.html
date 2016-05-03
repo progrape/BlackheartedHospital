@@ -11,6 +11,20 @@
             background: #efeff4;
             padding-bottom: 15px;
         }
+
+        .name {
+            font-weight: normal;
+            font-size: 16px;
+        }
+
+        .tel {
+            float: right;
+            color: #888;
+        }
+
+        .website {
+            color: #888;
+        }
     </style>
 </head>
 <body ontouchstart>
@@ -21,10 +35,14 @@
     {{each list as value key}}
     <div class="weui_cells_title">{{key}}</div>
     <div class="weui_cells">
-        {{each value as name}}
+        {{each value as item}}
         <div class="weui_cell">
             <div class="weui_cel_bd weui_cell_primary">
-                <p>{{name}}</p>
+                <div class="name">
+                    <span>{{item.name}}</span>
+                    <span class="tel">{{item.tel}}</span>
+                </div>
+                <p class="website">{{item.website}}</p>
             </div>
         </div>
         {{/each}}
@@ -47,7 +65,6 @@
                 var line = lines[i].trim();
                 if (line) {
                     if (/1\.1beta/gi.test(line)) {
-                        console.log(line);
                         break;
                     }
                     // 分组开头
@@ -58,8 +75,16 @@
                     else if (/^#[^#]+/gi.test(line)) {
                         area = null;
                     }
+                    else if (line.indexOf('电话') > -1) {
+                        list[area][list[area].length - 1]['tel'] = line.replace(/[-\s]/gi, '').replace('电话', '');
+                    }
+                    else if (line.indexOf('网址') > -1) {
+                        list[area][list[area].length - 1]['website'] = line.replace(/[-\s]/gi, '').replace('网址', '');
+                    }
                     else if (/-/gi.test(line) && area) {
-                        list[area].push(line.replace(/[#\s-]/gi, ''));
+                        list[area].push({
+                            name: line.replace(/[#\s-]/gi, '')
+                        });
                     }
                 }
             }
