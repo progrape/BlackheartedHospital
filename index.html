@@ -60,10 +60,12 @@
             }
             var html = template('tpl', {keys: keys, list: list});
             $('.container').html(html);
+            $.weui.hideLoading();
         }).error(function (err) {
             console.log(err);
-        }).always(function () {
             $.weui.hideLoading();
+        }).always(function () {
+
         });
     });
 </script>
