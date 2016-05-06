@@ -35,14 +35,14 @@
     {{each list as value key}}
     <div class="weui_cells_title">{{key}}</div>
     <div class="weui_cells">
-        {{each value as item}}
+        {{each value as item key}}
         <div class="weui_cell">
             <div class="weui_cel_bd weui_cell_primary">
                 <div class="name">
-                    <span>{{item.name}}</span>
-                    <span class="tel">{{item.tel}}</span>
+                    <span>{{key}}</span>
+                    <span class="tel">{{item['电话'] && item['电话'][0]}}</span>
                 </div>
-                <p class="website">{{item.website}}</p>
+                <p class="website">{{item['网址'] && item['网址'][0]}}</p>
             </div>
         </div>
         {{/each}}
@@ -56,39 +56,9 @@
     $(function () {
         $.weui.loading('加载中...');
 
-        $.get('https://raw.githubusercontent.com/langhua9527/BlackheartedHospital/master/README.md').success(function (str) {
-            var lines = str.split('\n');
-            var list = {};
-            var area = null;
-
-            for (var i = 0; i < lines.length; i++) {
-                var line = lines[i].trim();
-                if (line) {
-                    if (/1\.1beta/gi.test(line)) {
-                        break;
-                    }
-                    // 分组开头
-                    if (/^##[^#]+/gi.test(line)) {
-                        area = line.replace('##', '');
-                        list[area] = list[area] || [];
-                    }
-                    else if (/^#[^#]+/gi.test(line)) {
-                        area = null;
-                    }
-                    else if (line.indexOf('电话') > -1) {
-                        list[area][list[area].length - 1]['tel'] = line.replace(/[-\s]/gi, '').replace('电话', '');
-                    }
-                    else if (line.indexOf('网址') > -1) {
-                        list[area][list[area].length - 1]['website'] = line.replace(/[-\s]/gi, '').replace('网址', '');
-                    }
-                    else if (/-/gi.test(line) && area) {
-                        list[area].push({
-                            name: line.replace(/[#\s-]/gi, '')
-                        });
-                    }
-                }
-            }
-            var html = template('tpl', {list: list});
+        $.get('https://raw.githubusercontent.com/open-power-workgroup/Hospital/master/resource/API_resource/hospital_list.json').success(function (str) {
+            var data = JSON.parse(str);
+            var html = template('tpl', {list: data});
             $('.container').html(html);
             $.weui.hideLoading();
         }).error(function (err) {
