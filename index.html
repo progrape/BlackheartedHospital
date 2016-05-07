@@ -38,7 +38,7 @@
 </div>
 <script type="text/html" id="tpl">
     {{each list as value key}}
-    <div class="weui_cells_title">{{key}}</div>
+    <div class="weui_cells_title">{{key}}({{value | keys}}家)</div>
     <div class="weui_cells">
         {{each value as item key}}
         <div class="weui_cell">
@@ -206,6 +206,9 @@
 
         // 列表数据
         $.getJSON('https://raw.githubusercontent.com/open-power-workgroup/Hospital/master/resource/API_resource/hospital_list.json').success(function (data) {
+            template.helper('keys', function(obj){
+                return Object.keys(obj).length;
+            });
             var html = template('tpl', {list: data});
             $('.container').html(html);
             $.weui.hideLoading();
