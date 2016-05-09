@@ -61,15 +61,17 @@
 <script src="./template.js"></script>
 <script>
     $(function () {
-        $.weui.loading('加载中...');
 
-        // 图标数据
-        $.getJSON('https://raw.githubusercontent.com/wandergis/hospital-viz/gh-pages/hospital.json').success(function (json){
+        /**
+         * init charts
+         * @param json
+         */
+        function initCharts(json){
             var data = [];
             for(var key in json){
                 data.push({
                     name: key,
-                    value: ~~json[key].count
+                    value: Object.keys(json[key]).length
                 });
             }
             var charts = echarts.init(document.getElementById('charts'));
@@ -199,17 +201,18 @@
                 ]
             };
             charts.setOption(option);
-        }).error(function (err){
-            $.weui.alert(JSON.stringify(err));
-            $.weui.hideLoading();
-        });
+        }
 
-        // 列表数据
-        $.getJSON('https://raw.githubusercontent.com/open-power-workgroup/Hospital/master/resource/API_resource/hospital_list.json').success(function (data) {
+        $.weui.loading('加载中...');
+        $.getJSON('https://raw.githubusercontent.com/open-power-workgroup/Hospital/master/resource/API_resource/hospital_list.json').success(function (json) {
+            // render chart
+            initCharts(json);
+
+            // render list
             template.helper('keys', function(obj){
                 return Object.keys(obj).length;
             });
-            var html = template('tpl', {list: data});
+            var html = template('tpl', {list: json});
             $('.container').html(html);
             $.weui.hideLoading();
         }).error(function (err) {
