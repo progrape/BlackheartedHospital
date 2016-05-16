@@ -204,7 +204,7 @@
         }
 
         $.weui.loading('加载中...');
-        $.getJSON('https://raw.githubusercontent.com/open-power-workgroup/Hospital/master/resource/API_resource/hospital_list.json').success(function (json) {
+        $.getJSON('https://raw.githubusercontent.com/open-power-workgroup/Hospital/gh-pages/api/hospitals.json').success(function (json) {
             // render chart
             initCharts(json);
 
